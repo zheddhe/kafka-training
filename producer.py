@@ -9,7 +9,13 @@ kafka_producer = KafkaProducer(
     bootstrap_servers="localhost:9092",
     client_id='production_facile',
     value_serializer=encode_str,
-    key_serializer=encode_str
+    key_serializer=encode_str,
+    # --- Retry policy & fiabilité ---
+    retries=5,                           # nb de retries
+    retry_backoff_ms=100,                # backoff entre 2 retries
+    enable_idempotence=True,             # exactement-once côté producer
+    acks="all",                          # nécessaire pour l'idempotence
+    max_in_flight_requests_per_connection=1,  # préserver l’ordre avec retries
 )
 
 for i in range(1, 30):
